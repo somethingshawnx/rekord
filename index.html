@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#101119" />
+    <meta name="description" content="Record, polish, and share clear product walkthroughs." />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="icon" href="assets/icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="assets/icon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+    <title>Recordly Go — Recording studio</title>
+  </head>
+  <body>
+    <div class="noise"></div>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="Main navigation">
+        <a class="brand" href="#studio" aria-label="Recordly Go home">
+          <span class="brand-mark"><i></i><i></i><i></i></span>
+          <span>recordly<span class="brand-accent">go</span></span>
+        </a>
+        <nav>
+          <a class="nav-item active" href="#studio"><span class="nav-icon">⌾</span>Studio</a>
+          <a class="nav-item" href="#projects"><span class="nav-icon">▣</span>Projects <b id="projectCount">0</b></a>
+          <a class="nav-item" href="#templates"><span class="nav-icon">✦</span>Templates</a>
+        </nav>
+        <div class="sidebar-bottom">
+          <button class="quiet-button" id="helpButton"><span>?</span> Quick guide</button>
+          <div class="account"><span class="avatar">M</span><span><strong>Maker</strong><small>Free workspace</small></span><button aria-label="Account menu">···</button></div>
+        </div>
+      </aside>
+
+      <main>
+        <header class="topbar">
+          <div class="crumb"><span>Studio</span><span class="slash">/</span><strong id="projectTitle">Untitled recording</strong><span class="saved-status" id="saveStatus">Saved</span></div>
+          <div class="top-actions">
+            <button class="icon-button" id="shortcutsButton" aria-label="Keyboard shortcuts">⌘</button>
+            <button class="export-button" id="exportButton" disabled><span>↗</span> Export</button>
+          </div>
+        </header>
+
+        <section class="studio" id="studio">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">NEW PROJECT</p>
+              <h1>Make your next demo <em>feel effortless.</em></h1>
+            </div>
+            <button class="text-button" id="renameButton">Rename project <span>→</span></button>
+          </div>
+
+          <div class="workspace-grid">
+            <section class="capture-card panel" aria-labelledby="captureHeading">
+              <div class="panel-title">
+                <span class="step">01</span>
+                <div><h2 id="captureHeading">Choose a source</h2><p>Capture live or bring in a recording.</p></div>
+              </div>
+              <div class="source-tabs" role="tablist" aria-label="Capture source">
+                <button class="source-tab selected" data-source="screen" role="tab" aria-selected="true"><span>▧</span> Screen</button>
+                <button class="source-tab" data-source="camera" role="tab" aria-selected="false"><span>◉</span> Camera</button>
+                <button class="source-tab" data-source="upload" role="tab" aria-selected="false"><span>↑</span> Upload</button>
+              </div>
+              <div class="capture-options" id="captureOptions">
+                <div class="option-row">
+                  <span class="option-icon cyan">▤</span>
+                  <span><strong>Current screen</strong><small id="sourceDescription">Choose a tab, window, or display after pressing record.</small></span>
+                  <span class="check">✓</span>
+                </div>
+                <label class="toggle-row"><span><strong>Microphone</strong><small>Capture your voice over</small></span><input id="microphoneToggle" type="checkbox" checked /><i></i></label>
+                <label class="toggle-row"><span><strong>System audio</strong><small>Available when your browser allows it</small></span><input id="systemAudioToggle" type="checkbox" checked /><i></i></label>
+              </div>
+              <input type="file" id="fileInput" accept="video/*" hidden />
+              <button class="record-button" id="recordButton"><span class="record-dot"></span><span id="recordButtonText">Start recording</span><kbd>R</kbd></button>
+              <p class="capture-note"><span>⌁</span> Your recording stays on this device until you export it.</p>
+            </section>
+
+            <section class="preview-card panel" aria-labelledby="previewHeading">
+              <div class="preview-head"><div><p class="eyebrow">CANVAS</p><h2 id="previewHeading">Preview</h2></div><span class="ratio-pill">16:9</span></div>
+              <div class="preview-stage" id="previewStage">
+                <div class="mesh mesh-one"></div><div class="mesh mesh-two"></div>
+                <div class="preview-frame" id="previewFrame">
+                  <video id="previewVideo" playsinline muted aria-label="Recording preview"></video>
+                  <div class="empty-preview" id="emptyPreview">
+                    <span class="empty-icon">⌾</span>
+                    <strong>Your recording will appear here</strong>
+                    <small>Start with your screen, camera, or an upload.</small>
+                  </div>
+                  <div class="rec-indicator" id="recIndicator" hidden><span></span>REC <time id="recordingTime">00:00</time></div>
+                </div>
+                <button class="stage-play" id="playButton" disabled aria-label="Play preview">▶</button>
+              </div>
+              <div class="preview-footer"><span id="previewMeta">Ready when you are</span><span class="video-duration" id="durationLabel">00:00</span></div>
+            </section>
+          </div>
+
+          <section class="editor panel" id="editor" aria-labelledby="editorHeading">
+            <div class="editor-head">
+              <div><span class="step">02</span><h2 id="editorHeading">Polish your recording</h2></div>
+              <div class="editor-status" id="editorStatus"><span></span> Waiting for media</div>
+            </div>
+            <div class="editor-grid">
+              <div class="timeline-area">
+                <div class="timeline-toolbar"><button class="tool active" data-tool="select">↖ Select</button><button class="tool" data-tool="trim">⌫ Trim</button><button class="tool" data-tool="zoom">⌕ Zoom</button><button class="tool" data-tool="note">T Note</button><span class="timeline-time" id="currentTime">00:00 / 00:00</span></div>
+                <div class="timeline" id="timeline" aria-label="Video timeline">
+                  <div class="timeline-ruler"><span>0:00</span><span>0:15</span><span>0:30</span><span>0:45</span><span>1:00</span></div>
+                  <div class="video-track"><span class="track-label">VIDEO</span><div class="clip"><span class="clip-shine"></span><small id="clipName">No media yet</small><i class="trim-handle left"></i><i class="trim-handle right"></i></div></div>
+                  <div class="audio-track"><span class="track-label">AUDIO</span><div class="audio-wave"></div></div>
+                  <input id="scrubber" class="scrubber" type="range" min="0" max="100" value="0" disabled aria-label="Preview position" />
+                </div>
+                <div class="timeline-controls"><button id="backButton" disabled aria-label="Back five seconds">↶ 5s</button><button id="timelinePlay" disabled>▶ <span>Play</span></button><button id="forwardButton" disabled aria-label="Forward five seconds">5s ↷</button><label>Trim range <input id="trimStart" type="number" min="0" value="0" disabled aria-label="Trim start" /> <b>to</b> <input id="trimEnd" type="number" min="0" value="0" disabled aria-label="Trim end" /> sec</label></div>
+              </div>
+              <div class="inspector">
+                <div class="inspector-tabs"><button class="inspector-tab selected" data-inspector="style">Style</button><button class="inspector-tab" data-inspector="cursor">Cursor</button><button class="inspector-tab" data-inspector="webcam">Webcam</button></div>
+                <div class="inspector-content" id="stylePanel">
+                  <label class="field-label">Background</label>
+                  <div class="swatches" id="swatches"><button class="swatch selected" data-bg="aurora" aria-label="Aurora background"></button><button class="swatch midnight" data-bg="midnight" aria-label="Midnight background"></button><button class="swatch coral" data-bg="coral" aria-label="Coral background"></button><button class="swatch lime" data-bg="lime" aria-label="Lime background"></button><button class="swatch plain" data-bg="plain" aria-label="Plain background"></button></div>
+                  <label class="range-label">Frame padding <output id="paddingOutput">24 px</output><input id="paddingRange" type="range" min="0" max="48" value="24" /></label>
+                  <label class="range-label">Corner roundness <output id="roundnessOutput">18 px</output><input id="roundnessRange" type="range" min="0" max="32" value="18" /></label>
+                  <label class="checkbox-row"><input id="shadowToggle" type="checkbox" checked /> <span>Add soft shadow</span></label>
+                </div>
+                <div class="inspector-content hidden" id="cursorPanel">
+                  <label class="range-label">Cursor size <output>100%</output><input type="range" min="70" max="150" value="100" /></label>
+                  <label class="checkbox-row"><input type="checkbox" checked /> <span>Smooth movement</span></label>
+                  <label class="checkbox-row"><input type="checkbox" checked /> <span>Click bounce</span></label>
+                  <p class="inspector-hint">Cursor polish is applied when this project is exported from the native editor.</p>
+                </div>
+                <div class="inspector-content hidden" id="webcamPanel">
+                  <div class="empty-webcam"><span>◉</span><strong>Add a facecam</strong><p>Use a camera capture as a picture-in-picture layer.</p><button id="webcamButton">Use camera</button></div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </section>
+
+        <section class="projects-section hidden" id="projects" aria-labelledby="projectsHeading">
+          <p class="eyebrow">LOCAL LIBRARY</p><h1 id="projectsHeading">Your projects</h1><div class="projects-list" id="projectsList"></div>
+        </section>
+      </main>
+    </div>
+
+    <nav class="mobile-nav" aria-label="Mobile navigation"><a class="active" href="#studio">⌾<span>Studio</span></a><a href="#projects">▣<span>Projects</span></a><button id="mobileRecord">●<span>Record</span></button><a href="#templates">✦<span>Templates</span></a><button id="mobileHelp">?<span>Guide</span></button></nav>
+
+    <dialog id="exportDialog"><button class="dialog-close" data-close aria-label="Close">×</button><p class="eyebrow">EXPORT</p><h2>Ready to share?</h2><p class="dialog-copy">Your original recording will download as a WebM file. Visual styling, trims, and GIF export need the native render engine.</p><div class="export-options"><label><input type="radio" name="export" checked value="webm" /><span>WebM video<small>Best quality · Original recording</small></span></label><label class="coming"><input type="radio" name="export" disabled /><span>MP4 video<small>Coming with native export</small></span></label><label class="coming"><input type="radio" name="export" disabled /><span>Animated GIF<small>Coming with native export</small></span></label></div><button class="download-button" id="downloadButton">Download WebM <span>↓</span></button></dialog>
+    <dialog id="guideDialog"><button class="dialog-close" data-close aria-label="Close">×</button><p class="eyebrow">QUICK GUIDE</p><h2>From idea to a polished walkthrough.</h2><ol><li><b>Capture</b><span>Record a browser tab, your full screen, or your camera.</span></li><li><b>Polish</b><span>Choose a frame style and set the intended trim range.</span></li><li><b>Export</b><span>Download the original WebM now, or use the native renderer later for MP4 and GIF.</span></li></ol></dialog>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="app.js"></script>
+  </body>
+</html>
