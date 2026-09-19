@@ -3,148 +3,124 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="theme-color" content="#101119" />
-    <meta name="description" content="Record, polish, and share clear product walkthroughs." />
+    <meta name="theme-color" content="#0d0d10" />
+    <meta name="description" content="Recordly Go video editor." />
     <link rel="manifest" href="manifest.webmanifest" />
     <link rel="icon" href="assets/icon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="assets/icon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css" />
-    <title>Recordly Go — Recording studio</title>
+    <link rel="stylesheet" href="styles.css?v=editor-v2" />
+    <title>Recordly Go Editor</title>
   </head>
   <body>
-    <div class="noise"></div>
-    <div class="app-shell">
-      <aside class="sidebar" aria-label="Main navigation">
-        <a class="brand" href="#studio" aria-label="Recordly Go home">
-          <span class="brand-mark"><i></i><i></i><i></i></span>
-          <span>recordly<span class="brand-accent">go</span></span>
-        </a>
-        <nav>
-          <a class="nav-item active" href="#studio"><span class="nav-icon">⌾</span>Studio</a>
-          <a class="nav-item" href="#projects"><span class="nav-icon">▣</span>Projects <b id="projectCount">0</b></a>
-          <a class="nav-item" href="#templates"><span class="nav-icon">✦</span>Templates</a>
-        </nav>
-        <div class="sidebar-bottom">
-          <button class="quiet-button" id="helpButton"><span>?</span> Quick guide</button>
-          <div class="account"><span class="avatar">M</span><span><strong>Maker</strong><small>Free workspace</small></span><button aria-label="Account menu">···</button></div>
+    <div class="editor-app">
+      <header class="app-header">
+        <a class="mini-brand" href="#editor" aria-label="Recordly Go editor"><span class="wave-mark"><i></i><i></i><i></i></span><span>Recordly <b>Go</b></span></a>
+        <div class="header-tools">
+          <button class="header-icon" id="openButton" title="Import media" aria-label="Import media">▱</button>
+          <button class="header-icon" id="recordButton" title="Record your screen" aria-label="Record your screen"><span class="record-dot"></span></button>
+          <button class="header-icon" id="undoButton" title="Undo" aria-label="Undo">↶</button>
+          <button class="header-icon disabled" title="Redo" aria-label="Redo">↷</button>
         </div>
-      </aside>
+        <button class="project-name" id="renameButton"><span class="project-state"></span><strong id="projectTitle">Untitled recording</strong><small>.recordly</small></button>
+        <div class="header-actions"><button class="presets-button" id="presetsButton">▮ Presets <span>⌄</span></button><button class="export-button" id="exportButton" disabled>⇩ <span>Export</span></button></div>
+      </header>
 
-      <main>
-        <header class="topbar">
-          <div class="crumb"><span>Studio</span><span class="slash">/</span><strong id="projectTitle">Untitled recording</strong><span class="saved-status" id="saveStatus">Saved</span></div>
-          <div class="top-actions">
-            <button class="icon-button" id="shortcutsButton" aria-label="Keyboard shortcuts">⌘</button>
-            <button class="export-button" id="exportButton" disabled><span>↗</span> Export</button>
-          </div>
-        </header>
+      <main class="editor-layout" id="editor">
+        <aside class="tool-rail" aria-label="Editor tools">
+          <button class="rail-tool active" data-panel="background" title="Background"><span>✦</span><i></i></button>
+          <button class="rail-tool" data-panel="cursor" title="Cursor"><span>↖</span></button>
+          <button class="rail-tool" data-panel="webcam" title="Webcam"><span>▣</span></button>
+          <button class="rail-tool" data-panel="captions" title="Captions"><span>CC</span><i></i></button>
+          <button class="rail-tool" data-panel="settings" title="Settings"><span>⚙</span></button>
+          <button class="rail-tool" data-panel="extensions" title="Extensions"><span>✚</span></button>
+          <button class="profile-tool" title="Profile">M</button>
+        </aside>
 
-        <section class="studio" id="studio">
-          <div class="section-heading">
-            <div>
-              <p class="eyebrow">NEW PROJECT</p>
-              <h1>Make your next demo <em>feel effortless.</em></h1>
+        <aside class="inspector" id="inspector">
+          <section class="tool-panel" id="backgroundPanel">
+            <div class="panel-heading"><h1>BACKGROUND</h1><button data-reset="background">Reset</button></div>
+            <div class="setting-block compact"><label for="blurRange">Blur <output id="blurValue">0.0px</output></label><input id="blurRange" type="range" min="0" max="24" step="0.5" value="0" /></div>
+            <div class="segmented" id="backgroundTabs"><button class="selected" data-background-mode="image">Image</button><button data-background-mode="video">Video</button><button data-background-mode="color">Color</button><button data-background-mode="gradient">Gradient</button></div>
+            <button class="wide-ghost" id="uploadButton">⇧ &nbsp; Upload custom</button>
+            <div class="background-grid" aria-label="Background choices">
+              <button class="bg-thumb selected aurora" data-background="aurora" aria-label="Aurora"></button><button class="bg-thumb twilight" data-background="twilight" aria-label="Twilight"></button><button class="bg-thumb carbon" data-background="carbon" aria-label="Carbon"></button><button class="bg-thumb sunset" data-background="sunset" aria-label="Sunset"></button><button class="bg-thumb bloom" data-background="bloom" aria-label="Bloom"></button><button class="bg-thumb ocean" data-background="ocean" aria-label="Ocean"></button><button class="bg-thumb cloud" data-background="cloud" aria-label="Cloud"></button><button class="bg-thumb lime" data-background="lime" aria-label="Lime"></button><button class="bg-thumb violet" data-background="violet" aria-label="Violet"></button><button class="bg-thumb ice" data-background="ice" aria-label="Ice"></button><button class="bg-thumb cobalt" data-background="cobalt" aria-label="Cobalt"></button><button class="bg-thumb peach" data-background="peach" aria-label="Peach"></button><button class="bg-thumb red" data-background="red" aria-label="Red"></button><button class="bg-thumb moss" data-background="moss" aria-label="Moss"></button><button class="bg-thumb night" data-background="night" aria-label="Night"></button><button class="bg-thumb paper" data-background="paper" aria-label="Paper"></button><button class="bg-thumb haze" data-background="haze" aria-label="Haze"></button><button class="bg-thumb prism" data-background="prism" aria-label="Prism"></button>
             </div>
-            <button class="text-button" id="renameButton">Rename project <span>→</span></button>
-          </div>
-
-          <div class="workspace-grid">
-            <section class="capture-card panel" aria-labelledby="captureHeading">
-              <div class="panel-title">
-                <span class="step">01</span>
-                <div><h2 id="captureHeading">Choose a source</h2><p>Capture live or bring in a recording.</p></div>
-              </div>
-              <div class="source-tabs" role="tablist" aria-label="Capture source">
-                <button class="source-tab selected" data-source="screen" role="tab" aria-selected="true"><span>▧</span> Screen</button>
-                <button class="source-tab" data-source="camera" role="tab" aria-selected="false"><span>◉</span> Camera</button>
-                <button class="source-tab" data-source="upload" role="tab" aria-selected="false"><span>↑</span> Upload</button>
-              </div>
-              <div class="capture-options" id="captureOptions">
-                <div class="option-row">
-                  <span class="option-icon cyan">▤</span>
-                  <span><strong>Current screen</strong><small id="sourceDescription">Choose a tab, window, or display after pressing record.</small></span>
-                  <span class="check">✓</span>
-                </div>
-                <label class="toggle-row"><span><strong>Microphone</strong><small>Capture your voice over</small></span><input id="microphoneToggle" type="checkbox" checked /><i></i></label>
-                <label class="toggle-row"><span><strong>System audio</strong><small>Available when your browser allows it</small></span><input id="systemAudioToggle" type="checkbox" checked /><i></i></label>
-              </div>
-              <input type="file" id="fileInput" accept="video/*" hidden />
-              <button class="record-button" id="recordButton"><span class="record-dot"></span><span id="recordButtonText">Start recording</span><kbd>R</kbd></button>
-              <p class="capture-note"><span>⌁</span> Your recording stays on this device until you export it.</p>
-            </section>
-
-            <section class="preview-card panel" aria-labelledby="previewHeading">
-              <div class="preview-head"><div><p class="eyebrow">CANVAS</p><h2 id="previewHeading">Preview</h2></div><span class="ratio-pill">16:9</span></div>
-              <div class="preview-stage" id="previewStage">
-                <div class="mesh mesh-one"></div><div class="mesh mesh-two"></div>
-                <div class="preview-frame" id="previewFrame">
-                  <video id="previewVideo" playsinline muted aria-label="Recording preview"></video>
-                  <div class="empty-preview" id="emptyPreview">
-                    <span class="empty-icon">⌾</span>
-                    <strong>Your recording will appear here</strong>
-                    <small>Start with your screen, camera, or an upload.</small>
-                  </div>
-                  <div class="rec-indicator" id="recIndicator" hidden><span></span>REC <time id="recordingTime">00:00</time></div>
-                </div>
-                <button class="stage-play" id="playButton" disabled aria-label="Play preview">▶</button>
-              </div>
-              <div class="preview-footer"><span id="previewMeta">Ready when you are</span><span class="video-duration" id="durationLabel">00:00</span></div>
-            </section>
-          </div>
-
-          <section class="editor panel" id="editor" aria-labelledby="editorHeading">
-            <div class="editor-head">
-              <div><span class="step">02</span><h2 id="editorHeading">Polish your recording</h2></div>
-              <div class="editor-status" id="editorStatus"><span></span> Waiting for media</div>
-            </div>
-            <div class="editor-grid">
-              <div class="timeline-area">
-                <div class="timeline-toolbar"><button class="tool active" data-tool="select">↖ Select</button><button class="tool" data-tool="trim">⌫ Trim</button><button class="tool" data-tool="zoom">⌕ Zoom</button><button class="tool" data-tool="note">T Note</button><span class="timeline-time" id="currentTime">00:00 / 00:00</span></div>
-                <div class="timeline" id="timeline" aria-label="Video timeline">
-                  <div class="timeline-ruler"><span>0:00</span><span>0:15</span><span>0:30</span><span>0:45</span><span>1:00</span></div>
-                  <div class="video-track"><span class="track-label">VIDEO</span><div class="clip"><span class="clip-shine"></span><small id="clipName">No media yet</small><i class="trim-handle left"></i><i class="trim-handle right"></i></div></div>
-                  <div class="audio-track"><span class="track-label">AUDIO</span><div class="audio-wave"></div></div>
-                  <input id="scrubber" class="scrubber" type="range" min="0" max="100" value="0" disabled aria-label="Preview position" />
-                </div>
-                <div class="timeline-controls"><button id="backButton" disabled aria-label="Back five seconds">↶ 5s</button><button id="timelinePlay" disabled>▶ <span>Play</span></button><button id="forwardButton" disabled aria-label="Forward five seconds">5s ↷</button><label>Trim range <input id="trimStart" type="number" min="0" value="0" disabled aria-label="Trim start" /> <b>to</b> <input id="trimEnd" type="number" min="0" value="0" disabled aria-label="Trim end" /> sec</label></div>
-              </div>
-              <div class="inspector">
-                <div class="inspector-tabs"><button class="inspector-tab selected" data-inspector="style">Style</button><button class="inspector-tab" data-inspector="cursor">Cursor</button><button class="inspector-tab" data-inspector="webcam">Webcam</button></div>
-                <div class="inspector-content" id="stylePanel">
-                  <label class="field-label">Background</label>
-                  <div class="swatches" id="swatches"><button class="swatch selected" data-bg="aurora" aria-label="Aurora background"></button><button class="swatch midnight" data-bg="midnight" aria-label="Midnight background"></button><button class="swatch coral" data-bg="coral" aria-label="Coral background"></button><button class="swatch lime" data-bg="lime" aria-label="Lime background"></button><button class="swatch plain" data-bg="plain" aria-label="Plain background"></button></div>
-                  <label class="range-label">Frame padding <output id="paddingOutput">24 px</output><input id="paddingRange" type="range" min="0" max="48" value="24" /></label>
-                  <label class="range-label">Corner roundness <output id="roundnessOutput">18 px</output><input id="roundnessRange" type="range" min="0" max="32" value="18" /></label>
-                  <label class="checkbox-row"><input id="shadowToggle" type="checkbox" checked /> <span>Add soft shadow</span></label>
-                </div>
-                <div class="inspector-content hidden" id="cursorPanel">
-                  <label class="range-label">Cursor size <output>100%</output><input type="range" min="70" max="150" value="100" /></label>
-                  <label class="checkbox-row"><input type="checkbox" checked /> <span>Smooth movement</span></label>
-                  <label class="checkbox-row"><input type="checkbox" checked /> <span>Click bounce</span></label>
-                  <p class="inspector-hint">Cursor polish is applied when this project is exported from the native editor.</p>
-                </div>
-                <div class="inspector-content hidden" id="webcamPanel">
-                  <div class="empty-webcam"><span>◉</span><strong>Add a facecam</strong><p>Use a camera capture as a picture-in-picture layer.</p><button id="webcamButton">Use camera</button></div>
-                </div>
-              </div>
-            </div>
+            <div class="panel-heading subsection"><h1>FRAME</h1><button data-reset="frame">Reset</button></div>
+            <div class="setting-block"><label for="shadowRange">Shadow <output id="shadowValue">67%</output></label><input id="shadowRange" type="range" min="0" max="100" value="67" /></div>
+            <div class="setting-block"><label for="radiusRange">Radius <output id="radiusValue">0%</output></label><input id="radiusRange" type="range" min="0" max="32" value="0" /></div>
+            <div class="panel-heading subsection"><h1>PADDING</h1><button id="advancedButton">Advanced</button></div>
+            <div class="setting-block"><label for="paddingRange">Padding <output id="paddingValue">20%</output></label><input id="paddingRange" type="range" min="0" max="30" value="20" /></div>
+            <label class="toggle-setting">Remove background <input id="removeBackground" type="checkbox" /><i></i></label>
+            <div class="panel-heading subsection"><h1>CROP</h1></div>
+            <div class="crop-controls"><label>Top <input type="number" id="cropTop" min="0" max="50" value="0" />%</label><label>Bottom <input type="number" id="cropBottom" min="0" max="50" value="0" />%</label></div>
           </section>
+
+          <section class="tool-panel hidden" id="cursorPanel">
+            <div class="panel-heading"><h1>CURSOR</h1><button data-reset="cursor">Reset</button></div>
+            <label class="toggle-setting">Show cursor <input id="cursorToggle" type="checkbox" checked /><i></i></label>
+            <div class="setting-block"><label for="cursorSize">Cursor size <output id="cursorSizeValue">100%</output></label><input id="cursorSize" type="range" min="70" max="150" value="100" /></div>
+            <div class="setting-block"><label for="smoothingRange">Smoothing <output id="smoothingValue">56%</output></label><input id="smoothingRange" type="range" min="0" max="100" value="56" /></div>
+            <label class="toggle-setting">Click bounce <input id="clickBounce" type="checkbox" checked /><i></i></label>
+            <label class="toggle-setting">Motion blur <input id="motionBlur" type="checkbox" checked /><i></i></label>
+            <p class="panel-note">Polish cursor movement on the final render. Drag the cursor layer in the timeline to fine tune timing.</p>
+          </section>
+
+          <section class="tool-panel hidden" id="webcamPanel">
+            <div class="panel-heading"><h1>WEBCAM</h1><button data-reset="webcam">Reset</button></div>
+            <div class="webcam-blank"><span>◉</span><strong>Add a facecam layer</strong><p>Use a camera recording to make your walkthrough more personal.</p><button id="webcamButton">Open camera</button></div>
+            <div class="panel-heading subsection"><h1>POSITION</h1></div>
+            <div class="position-grid"><button class="selected">↖</button><button>↑</button><button>↗</button><button>←</button><button>•</button><button>→</button><button>↙</button><button>↓</button><button>↘</button></div>
+          </section>
+
+          <section class="tool-panel hidden" id="captionsPanel">
+            <div class="panel-heading"><h1>CAPTIONS</h1><button data-reset="captions">Reset</button></div>
+            <label class="toggle-setting top-toggle">Show <input id="captionsToggle" type="checkbox" /><i></i></label>
+            <button class="model-button" id="modelButton">Select model</button>
+            <label class="select-setting">Language <select id="languageSelect"><option>English</option><option>Hindi</option><option>Spanish</option><option>Japanese</option></select></label>
+            <div class="caption-buttons"><button id="downloadModel">Download model</button><button id="clearCaptions" disabled>Clear captions</button></div>
+            <button class="wide-primary" id="generateCaptions">Generate captions</button>
+            <div class="setting-row"><span>Animation</span><select id="animationSelect"><option>Fade</option><option>Pop</option><option>Slide up</option></select></div>
+            <label class="toggle-setting">Hover to add on timeline <input type="checkbox" checked /><i></i></label>
+            <div class="color-setting"><span>Text color</span><input type="color" id="captionColor" value="#ffffff" /></div>
+            <h2>Font Settings</h2>
+            <div class="setting-block"><label for="captionSize">Font size <output id="captionSizeValue">30px</output></label><input id="captionSize" type="range" min="16" max="56" value="30" /></div>
+            <div class="setting-block"><label for="captionRows">Rows <output id="captionRowsValue">1</output></label><input id="captionRows" type="range" min="1" max="3" value="1" /></div>
+          </section>
+
+          <section class="tool-panel hidden" id="settingsPanel"><div class="panel-heading"><h1>PROJECT SETTINGS</h1></div><label class="select-setting">Output ratio <select id="ratioSelect"><option value="16 / 9">16:9 — Landscape</option><option value="9 / 16">9:16 — Portrait</option><option value="1 / 1">1:1 — Square</option></select></label><label class="toggle-setting">Use dark canvas <input type="checkbox" checked /><i></i></label><p class="panel-note">Settings are saved locally in this browser.</p></section>
+          <section class="tool-panel hidden" id="extensionsPanel"><div class="panel-heading"><h1>EXTENSIONS</h1></div><div class="extension-blank"><span>✚</span><strong>Build your editor</strong><p>Cursor sounds, device frames, render hooks, and more can be added as extensions.</p><button>Browse marketplace</button></div></section>
+        </aside>
+
+        <section class="workbench">
+          <div class="canvas-toolbar"><span></span><div><button id="aspectButton">16:9 <span>⌄</span></button><i></i><button id="cropButton">⌗ &nbsp; Crop video</button></div></div>
+          <div class="canvas-area" id="canvasArea">
+            <div class="artboard aurora" id="artboard">
+              <div class="preview-surface" id="previewSurface">
+                <video id="previewVideo" playsinline muted></video>
+                <div class="demo-screen" id="emptyPreview"><div class="demo-top"><span>◈</span><span>Project overview</span><em>LIVE</em></div><div class="demo-sidebar"><b></b><b></b><b></b><b></b></div><div class="demo-content"><p>Turn ideas into<br /><strong>clear stories.</strong></p><div class="demo-card"><i></i><span>Import a video or record your screen to begin.</span></div></div></div>
+                <div class="caption-preview hidden" id="captionPreview">Your captions appear here</div>
+                <div class="recording-pill hidden" id="recordingPill"><i></i> REC <time id="recordingTime">00:00</time></div>
+              </div>
+            </div>
+            <div class="canvas-empty-actions" id="emptyActions"><button id="importButton">Import media</button><span>or</span><button id="captureButton">Record screen</button></div>
+          </div>
+          <div class="transport"><button class="add-layer" id="addLayerButton">＋ Add layer <span>⌄</span></button><i></i><button title="Zoom in">⌕</button><button title="Magic tools">♢</button><button title="Cut">✂</button><div class="transport-play"><time id="currentTime">0:00</time><button id="backButton" disabled>▐◀</button><button class="play-button" id="playButton" disabled>▶</button><button id="forwardButton" disabled>▶▐</button><time id="durationLabel">0:00</time></div><div class="volume">⌕ <input type="range" min="0" max="100" value="100" aria-label="Playback volume" /></div></div>
         </section>
 
-        <section class="projects-section hidden" id="projects" aria-labelledby="projectsHeading">
-          <p class="eyebrow">LOCAL LIBRARY</p><h1 id="projectsHeading">Your projects</h1><div class="projects-list" id="projectsList"></div>
+        <section class="timeline-panel">
+          <div class="timeline-scale"><span>0:00</span><span>0:10</span><span>0:20</span><span>0:30</span><span>0:40</span><span>0:50</span><span>1:00</span></div>
+          <div class="timeline-content" id="timelineContent"><input id="scrubber" class="timeline-scrubber" type="range" min="0" max="100" value="0" disabled aria-label="Preview position" /><div class="video-layer"><span class="layer-label">▧ &nbsp; Clip</span><div class="layer-ruler"></div></div><div class="zoom-layer" id="zoomLayer"><span class="zoom-pill" style="left:9%;width:6%">⌕ 1.5×</span><span class="zoom-pill" style="left:23%;width:10%">⌕ 1.5×</span><span class="zoom-pill" style="left:49%;width:4%">⌕ 1.5×</span><span class="zoom-pill" style="left:72%;width:7%">⌕ 1.5×</span><span class="zoom-pill" style="left:90%;width:6%">⌕ 1.5×</span></div><div class="caption-layer hidden" id="captionLayer"><span>CC &nbsp; Caption layer</span></div></div>
         </section>
       </main>
     </div>
 
-    <nav class="mobile-nav" aria-label="Mobile navigation"><a class="active" href="#studio">⌾<span>Studio</span></a><a href="#projects">▣<span>Projects</span></a><button id="mobileRecord">●<span>Record</span></button><a href="#templates">✦<span>Templates</span></a><button id="mobileHelp">?<span>Guide</span></button></nav>
-
-    <dialog id="exportDialog"><button class="dialog-close" data-close aria-label="Close">×</button><p class="eyebrow">EXPORT</p><h2>Ready to share?</h2><p class="dialog-copy">Your original recording will download as a WebM file. Visual styling, trims, and GIF export need the native render engine.</p><div class="export-options"><label><input type="radio" name="export" checked value="webm" /><span>WebM video<small>Best quality · Original recording</small></span></label><label class="coming"><input type="radio" name="export" disabled /><span>MP4 video<small>Coming with native export</small></span></label><label class="coming"><input type="radio" name="export" disabled /><span>Animated GIF<small>Coming with native export</small></span></label></div><button class="download-button" id="downloadButton">Download WebM <span>↓</span></button></dialog>
-    <dialog id="guideDialog"><button class="dialog-close" data-close aria-label="Close">×</button><p class="eyebrow">QUICK GUIDE</p><h2>From idea to a polished walkthrough.</h2><ol><li><b>Capture</b><span>Record a browser tab, your full screen, or your camera.</span></li><li><b>Polish</b><span>Choose a frame style and set the intended trim range.</span></li><li><b>Export</b><span>Download the original WebM now, or use the native renderer later for MP4 and GIF.</span></li></ol></dialog>
+    <input id="fileInput" type="file" accept="video/*" hidden />
+    <dialog id="exportDialog"><button class="dialog-close" data-close aria-label="Close">×</button><p class="eyebrow">EXPORT</p><h2>Ready to share?</h2><p>Your original recording is ready to download as WebM. Native MP4 and GIF rendering will preserve the selected styling.</p><div class="export-row"><span>WebM video<small>Original recording</small></span><span>HD</span></div><button id="downloadButton" class="dialog-primary">Download WebM&nbsp; ↓</button></dialog>
+    <dialog id="presetsDialog"><button class="dialog-close" data-close aria-label="Close">×</button><p class="eyebrow">PRESETS</p><h2>Start with a style.</h2><div class="preset-list"><button data-preset="aurora"><i class="aurora"></i>Aurora glass</button><button data-preset="night"><i class="night"></i>Deep night</button><button data-preset="paper"><i class="paper"></i>Clean paper</button></div></dialog>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
-    <script src="app.js"></script>
+    <script src="app.js?v=editor-v2"></script>
   </body>
 </html>

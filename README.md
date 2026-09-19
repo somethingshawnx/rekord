@@ -1,6 +1,6 @@
 # Recordly Go
 
-A responsive, installable web MVP for the Recordly screen-recording idea. It works in modern desktop browsers and Android Chrome, and it is ready to be wrapped with Capacitor for Android.
+A responsive, installable web MVP for the Recordly screen-recording idea. It now uses a desktop-editor interface with a tool rail, background inspector, captions workspace, preview canvas, transport controls, and multi-layer timeline. It works in modern desktop browsers and Android Chrome, and it is ready to be wrapped with Capacitor for Android.
 
 ## Run the web app
 
@@ -13,11 +13,12 @@ Open the localhost address printed by the command. Use HTTPS (or localhost) for 
 
 ## What works now
 
-- Browser screen capture with optional system audio and microphone
-- Android/desktop camera capture
-- Video upload, preview, playback scrubber, trim-range playback, local project library, and WebM download
+- Browser screen capture with browser-provided audio
+- Android-ready Capacitor configuration for the native camera and screen-capture layer
+- Video upload, preview, playback scrubber, timeline scrubber, and WebM download
+- Background, frame, cursor, webcam, captions, project, and extension inspector panels
 - Responsive UI, PWA manifest, and offline app shell
-- Frame styling controls for the preview
+- Editor styling controls that update the preview canvas
 
 ## Package it for Android
 
